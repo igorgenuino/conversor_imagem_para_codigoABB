@@ -1,0 +1,478 @@
+DESENHO COM BRAÇO
+ROBÓTICO ABB
+Trabalho final de Fundamentos de Robótica – EN 2715
+Professor Doutor Filipe Ieda Fazanaro
+UFABC – Maio 2016
+Caio Pereira da Silva RA: 21001212 / Igor Martins Genuino RA: 11028711Prof. Dr. Filipe Ieda Fazanaro - EN 2715
+Sumário
+1.Introdução ........................................................................................................................................ 2
+2.Objetivos .......................................................................................................................................... 3
+3. Metodologia .................................................................................................................................... 4
+3.1. Escolha da Imagem ................................................................................................................... 4
+3.2. Vetorização ............................................................................................................................... 5
+3.3. Arquivo SVG............................................................................................................................ 10
+3.4. Formação das coordenadas no Matlab® ................................................................................ 14
+3.5. Uso do Excel para gerar código finais .................................................................................... 18
+4. Resultados ..................................................................................................................................... 20
+5. Discussões e Conclusões ............................................................................................................... 23
+UFABC – Maio 2016
+1Prof. Dr. Filipe Ieda Fazanaro - EN 2715
+1.Introdução
+A robótica desde sua criação foi responsável por realizar tarefas tidas como
+insalubres ou demasiadamente repetitivas com objetivo de reduzir custos de produção e de
+diminuir o risco operacional ligada a mão-de-obra.
+Desta forma os primeiros robôs eram construídos e programados de modo a atender
+alguma atividade extremamente especializada, porém com o avanço da robótica é possível
+construir um robô que realize apenas uma tarefa. Desta forma surgiram os primeiros robôs
+generalistas a ponto de a partir de alterações de linhas de programação poderiam fazer
+atividades mais abrangentes.
+Este trabalho aqui apresentado segue essa linha de tendência do mercado em geral,
+pois foi desenvolvida uma metodologia que consegue a partir de uma imagem genérica
+obter os comandos necessários para realizar o desenho, a partir do braço robótico da ABB,
+que retrata de maneira satisfatória a figura que se quer desenhar.
+A confecção de desenhos a partir de imagens pode ter grande relevância para a
+realização de projetos complexos, pois abstraindo da proposta inicial podemos realizar
+projetos envolvendo soldagem de circuitos impressos, usinagem de chapas, pinturas em
+superfícies e etc. A aplicação de uma metodologia como essa tem grande vantagem,
+quando comparamos com a inserção manual ponto-a-ponto da figura desejada, como
+menor tempo de programação e maior capacidade de detalhes.
+As tarefas envolvidas, a partir de uma imagem genérica, na realização do projeto
+envolvem os conceitos de seguimento de obtenção de pontos, obtenção de trajetória,
+vetorização de imagens, transformação de curvas em retas através do método de Bézier e
+geração automatizada do código final.
+Ficou evidenciado que o robô precisa que um operador humano defina o ponto incial
+e a constante responsável por definir as dimensões gerais do desenho de modo a fazer
+com que a gravura fique dentro dos limites da superfície em que se quer trabalhar, sendo
+que no caso desse projeto precisou-se determinar o ponto inicial e a constante de
+dimensionamento para que o desenho se enquadrasse dentro de uma folha de cartolina
+convencional. Outro problema a ser destacado é o fato de que imagens com contraste de
+luminosidade muito destacados possam resultar em um desenho com alguma poluição
+visual.
+UFABC – Maio 2016
+2Prof. Dr. Filipe Ieda Fazanaro - EN 2715
+2.Objetivos
+Tendo em mente os robôs generalistas que aceitam linhas de código para realizar
+tarefas, o objetivo deste trabalho é a partir de uma figura genérica presente no computador,
+obter essa mesma figura desenhada em folha por um robô ABB IRB 1600.
+Para isso precisou-se resolver algumas tarefas decorrentes desse processo, que
+são: obter os pontos da imagem, usar os pontos da imagem para determinar as trajetórias,
+e imprimir as linhas de código para o robô ABB,
+O objetivo inicial implicado pela disciplina seria de apenas desenhar uma figura
+qualquer com o braço ABB, não importando como fossem obtidas as coordenadas. Porém,
+com o intuito de buscar maior automatização e uma maior capacidade de se obter desenhos
+mais detalhadas, colocou-se como objetivo automatizar a geração dos pontos e das linhas
+de código.
+UFABC – Maio 2016
+3Prof. Dr. Filipe Ieda Fazanaro - EN 2715
+3. Metodologia
+3.1. Escolha da Imagem
+A partir do objetivo proposto, buscou-se uma figura genérica que tivesse um número
+considerável de detalhes para que após a realização do processo fosse possível averiguar
+a eficácia do método. Uma figura que atendeu aos critérios de complexidade de detalhes
+estabelecido no parágrafo anterior, pois a obtenção de suas coordenadas de maneira
+exclusivamente manual se mostrou muito custosa em termos de tempo emprendido, foi
+uma imagem de robô R2D2, em formato JPEG, da franquia de filmes Star Wars® que pode
+ser facilmente encontrada na internet.
+Imagem escolhida para pratica
+A partir da imagem, precisou-se buscar métodos que permitissem a obtenção dos
+pontos que formam a imagem.
+Uma solução encontrada foi a vetorização de imagem.
+UFABC – Maio 2016
+4Prof. Dr. Filipe Ieda Fazanaro - EN 2715
+3.2. Vetorização
+Arquivos vetoriais são constituídos por vetores, que são entidades definidas
+matematicamente como uma série de pontos unidos por linhas. Cada vetor é uma entidade
+independente com propriedades como cor, forma, contorno, tamanho e posição na tela,
+incluídas na sua definição.
+Vetorizar é transformar linhas e contornos de uma foto ou imagem em
+representações numéricas, é como, por exemplo, pegar uma imagem JPEG e fazer com
+que algum programa reconheça suas linhas e cores, respeitando os contornos
+reconhecidos. Uma imagem vetorizada se trata de uma representação numérica, formada
+por vetores, dessa forma as dimensões da imagem não têm influência no espaço em disco
+que o arquivo ocupa, ou seja, se uma imagem vetorizada de 100X100 pixels tem 100Kb ela
+também terá 100Kb se a ampliarmos para 1000X1000 pixels, ou seja, sua qualidade
+permanecerá inalterada já que os vetores podem ser constantemente redimensionados
+através da multiplicação de uma constante conforme o usuário amplia ou reduz as
+dimensões de uma figura qualquer. (RELBERT, 2011)
+Para vetorizar a imagem proposta, fez-se uso de um software gratuito chamado
+VectorMagic®. É um software de fácil utilização que permite a entrada de arquivos diversos
+como JPEG e PNG, e a conversão em arquivos vetorizados como o SVG, formato que irá
+ser explicado posteriormente neste relatório.
+O VectorMagic® pode ser baixado no site http://vectormagic.com/home. O site
+oferece também o mesmo serviço online, sem a necessidade de realizar download nem
+instalação.
+O procedimento de conversão em um arquivo JPEG para um arquivo vetorizado
+através do VectorMagic® está descrito abaixo.
+UFABC – Maio 2016
+5Prof. Dr. Filipe Ieda Fazanaro - EN 2715
+1o Clique em Import from Folder e escolha a imagem que se deseja converter.
+2o Clique em Basic e logo em seguida em Next.
+UFABC – Maio 2016
+6Prof. Dr. Filipe Ieda Fazanaro - EN 2715
+3o Como a imagem escolhida foi obtida de um arquivo JPEG de uma figura, e não fotografia,
+escolheu-se a opção Artwork with blended edges e em seguida pressionou-se o botão
+Next.
+4o Escolheu-se a qualidade da vetorização, no caso selecionou-se a opção de maior
+qualidade, e pressionou-se o botão High seguido do botão Next.
+UFABC – Maio 2016
+7Prof. Dr. Filipe Ieda Fazanaro - EN 2715
+5o Como deseja-se apenas os contornos para o desenho final, o padrão de cores não é
+importante para o escopo do projeto, logo definiu-se apenas a conversão em duas cores e
+pressionou-se os botões Two Colors e Next.
+6o Nessa etapa já se tem a imagem vetorizada. Bastando pressionar o botão Next.
+UFABC – Maio 2016
+8Prof. Dr. Filipe Ieda Fazanaro - EN 2715
+7o A imagem foi salva e entre os diversos formatos disponíveis optou-se pelo formato SVG.
+O motivo dessa escolha será apresentado posteriormente. Por fim, bastou-se pressionar o
+botão Quick Save.
+UFABC – Maio 2016
+9Prof. Dr. Filipe Ieda Fazanaro - EN 2715
+3.3. Arquivo SVG
+Scalable Vector Graphics (ou simplesmente SVG) é um formato aberto de imagem
+vetorial 2D. O formato SVG a principio foi criado para ser o padrão de imagem vetorial da
+Web.
+Para entender de maneira empírica o que é um arquivo SVG pode-se abrir a imagem
+que foi escolhida para o projeto com um navegador de internet, como o Internet Explorer®.
+Imagem antes JPEG, agora vetorizada em formato SVG, aberta com Internet Explorer®
+UFABC – Maio 2016
+10Prof. Dr. Filipe Ieda Fazanaro - EN 2715
+Nota-se que por ser um arquivo vetorizado, é possível ampliar a imagem sem que a
+mesma perca qualidade, pois seus contornos são formados por vetores.
+Imagem SVG ampliada. Não acontece perda na imagem
+Agora para entender por que escolheu-se o arquivo SVG para a realização do
+trabalho abriu-se esse mesmo arquivo com o editor de texto Bloco de Notas.
+Arquivo SVG aberto com o Bloco de Notas
+UFABC – Maio 2016
+11Prof. Dr. Filipe Ieda Fazanaro - EN 2715
+O formato SVG é composto por uma serie de códigos que descrevem a construção
+da imagem. Deseja-se os correspondentes que formam os contornos da imagem. Observe
+o trecho a abaixo:
+“<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE
+svg
+PUBLIC
+"-//W3C//DTD
+"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg
+width="1024pt"
+height="576pt"
+xmlns="http://www.w3.org/2000/svg">
+viewBox="0
+0
+1024
+SVG 1.1//EN"
+576" version="1.1"
+<g id="#ffffffff">
+<path fill="#ffffff" opacity="1.00" d=" M 0.00 0.00 L 1024.00 0.00 L 1024.00 576.00 L 0.00 576.00 L
+0.00 0.00 M 494.96 19.25 C 483.90 20.77 472.59 23.24 463.13 29.47”
+O atributo “d” indica o inicio da formação do contorno e vetores da imagem. Os
+códigos anteriores indicam outros atributos, como cores, preenchimento, padrão, mas para
+as condições deste trabalho, apenas o contorno da figura é relevante para o escopo do
+projeto, ou seja, apenas os vetores da imagem são relevantes. (AurelioAHeckert, 2008)
+Assim o atributo “d” dá início a formação de uma parte do contorno da imagem. O
+valor dele sempre começa com “M”, que significa "mover para”, na seqüência coloca-se a
+primeira coordenada x,y para posicionar o primeiro nó. Existem várias formas de ligar esse
+ponto ao ponto seguinte, isso informa-se com a letra que vem em seguida. O “L” significa
+"linha para" e depois dele coloca-se a coordenada do nó seguinte e entre eles estabelece-
+se uma linha reta. O “C” indica que a linha que o liga ao ponto seguinte é uma curva Bézier.
+Nessa curva a linha é atraída por pontos no espaço chamados alças de controle, um
+vinculado ao nó de origem da linha e o outro ao nó de chegada. Por isso tem-se seis
+coordenadas após o C, as duas primeiras são a alça do nó de origem, as duas seguintes
+são a alça do nó de chegada e as duas ultimas são os nós de chegada em si.
+(AurelioAHeckert, 2008)
+Utilizando um editor de texto, no caso utilizou-se o Word®, eliminou-se as linhas de
+código do programa, selecionando assim apenas uma parte, com um único atributo “d”.
+UFABC – Maio 2016
+12Prof. Dr. Filipe Ieda Fazanaro - EN 2715
+Exemplo de Arquivo limpo no Word® apenas com as instruções de coordenadas SVG
+Com base no código, pode-se verificar que os comandos “M” e “L” sempre precedem
+as coordenadas que formam o contorno do desenho.
+O atributo C se mostra problemático. Ele não indica uma coordenada no plano 2D
+de forma direta, não sendo possível utiliza-la de forma direta.
+Para resolver esse problema utilizou-se o MatLab® e o conceito de curva de Bézier.
+UFABC – Maio 2016
+13Prof. Dr. Filipe Ieda Fazanaro - EN 2715
+3.4. Formação das coordenadas no Matlab®
+Após filtrar o código, deixando apenas o formato onde existem somente instruções
+M, L e C, inseriu-se o arquivo de texto no Matlab® para transformar as coordenadas C de
+Bézier em linhas de código L.
+O programa em Matlab® tem a seguinte estrutura comentada:
+clear all, clc, close all
+% Programa para gerar um arquivo txt somente com comando de linhas
+%de deslocamento a partir de um txt vindo de um svg
+% a entrada deste programa dever ser um arquivo txt onde os simbolos
+%de curva, linha e movimento estejam identificados de acordo com o
+% padrao a seguir **ESPACO*C*ESPACO**, ou seja ** C **
+% Portanto é necessario fazer uma modificacão rapida no word ou onde quer
+% que for para e substituir neste padrão. Alem disso, colocar letra maiuscula.
+%% começo
+Numero_retas = 10;
+resultado_final = []; % resultado final - SVG vector Conterá os pontos que queremos
+text = fileread('tester2d2.txt'); % importa texto svg limpo do jeito que precisamos
+% acha as posições das letras do arquivo svg, o comando strfind encontra as
+% posições das letras ao longo do texto
+CC = strfind(text, ' C ');
+MM = strfind(text, ' M ');
+LL = strfind(text, ' L ');
+% organiza as letras na ordem, o comando sort ordena em ordem crescente
+%os elementos dentro do veto desejado
+posicoes_MLC = sort([CC MM LL]);
+% define o tamanho do vetor N que iremos utilizar
+N = length(posicoes_MLC);
+%o for vai definir oque acontecera com cada letra letra C M ou L
+for i = 1:N
+if i == N
+Texto_a_Inserir = text( posicoes_MLC(i):end);
+else
+% Começamos a montar o texto. Em um codigo SVG nunca o primeiro
+% é sempre M, então podemos começar aqui. Por exemplo: o
+% posicoes_MLC(1) é 4. 4 é a posição da primeira letra do nosso arquivo
+% de texto. O Texto_a_Inserir é formado pelo texto entre a posição a primeira
+% letra que esta na posição posicoes_MLC(1) e a segunda letra que esta na
+% posição posicoes_MLC(2). Assim, Texto_a_Inserir é M 0.00 0.00. M é o
+% posicoes_MLC(1) seguido pelo text ate o proximo posicoes_MLC.
+Texto_a_Inserir = text( posicoes_MLC(i):posicoes_MLC(i+1));
+UFABC – Maio 2016
+14Prof. Dr. Filipe Ieda Fazanaro - EN 2715
+end
+% Letra L e M nao são problemas. O C não é possivel de ser interpretado
+% pelo codigo o robo ABB como uma coordenadas_Cenada de forma direta. O vetor
+% achar_C é montado pelas posições do C que temos que modificar
+achar_C = strfind(Texto_a_Inserir,'C');
+% Casos
+if achar_C ~= 0
+% Sabemos pelo SVG que o é uma curva de bezier, entao vamos
+% trabalhar nisso. Pegamos os valores que tem apos a letra C que
+% sao as coordenadas_Cenadas de bezier. Transformamos em numeros.
+coordenadas_C = str2num(Texto_a_Inserir(1,achar_C+1:end));
+% Aqui colocamos os ultimos pontos antes do C como referencia de
+% inicio. Por exemplo, no primeiro C, o passo anterior foi mover
+% para M 483.0200 23.0100
+add2coordenadas_C = text(posicoes_MLC(i-1)+ 3:posicoes_MLC(i));
+add2coordenadas_C = str2num(add2coordenadas_C);
+add2coordenadas_C = [add2coordenadas_C(end-1) add2coordenadas_C(end)];
+% O NV é composto pelas coordenadas_Cenadas iniciais e pelas coordenadas_Cenadas do
+% SVG de bezier
+NV = [add2coordenadas_C coordenadas_C];
+% Chama a função bezier. NV(1) e NV(2) são os pontos iniciais.
+% Numero_retas é o numero de "retas" que se deseja transformar a curva. Px
+% e Py sao as coordenadas_Cenadas ponto a ponto das retas que formam a
+% curva
+[Px,Py] = bezier(NV(1),NV(2),NV(3),NV(4),NV(5),NV(6),NV(7),NV(8),Numero_retas);
+% Aqui transformamos os pontos Px e Py em texto com L (codigo de
+% reta. Assim, a curva de bezier foi transformada em Numero_retas retas,
+% trocando o codigo C para Numero_retas codigos L.
+for j = 1:size(Px,2)
+Texto_a_Inserir = num2str([Px(j) Py(j)]);
+%colocamos os Numero_retas coordenadas_Cenadas Px Py em forma de retas no
+%resultado_final.
+resultado_final = [resultado_final ' L ' Texto_a_Inserir ' ; ' ];
+end
+else
+%aqui é jogado no resultado_final (que é nosso vetor final) o Texto_a_Inserir.
+resultado_final = [resultado_final Texto_a_Inserir ' ; '];
+end
+end
+%formamos o arquivo de texto com todas as coordenadas_Cenadas do desenho apenas
+%com M de mover e L de linha reta. Tudo pode ser interpretato pelo
+%programa da ABB.
+fileID = fopen('teste1.txt','w');
+fprintf(fileID, resultado_final)
+fclose(fileID)
+UFABC – Maio 2016
+15Prof. Dr. Filipe Ieda Fazanaro - EN 2715
+E utiliza como ferramenta um subprograma, que transforma o código C em um
+determinado numero de código L através do conceito de Bezier (calderon, 2011). A
+estrutura desse programa é apresentada abaixo:
+function [Px,Py] = bezier(p0x,p0y,cp0x,cp0y,cp1x,cp1y,p1x,p1y,N)
+% N=10;
+% % Exemplo
+% p0x=0;
+% p0y=0;
+%
+% cp0x=25;
+% cp0y=100;
+%
+% cp1x=75;
+% cp1y=100;
+%
+% p1x=100;
+% p1y=0;
+for i = 1:N
+t=i/N;
+%%
+Ax(i) = ( (1 - t) * p0x ) + (t * cp0x);
+Ay(i) = ( (1 - t) * p0y ) + (t * cp0y);
+Bx(i) = ( (1 - t) * cp0x ) + (t * cp1x);
+By(i) = ( (1 - t) * cp0y ) + (t * cp1y);
+Cx(i) = ( (1 - t) * cp1x ) + (t * p1x);
+Cy(i)= ( (1 - t) * cp1y ) + (t * p1y);
+%%
+Dx(i) = ( (1 - t) * Ax(i) ) + (t * Bx(i));
+Dy(i) = ( (1 - t) * Ay(i) ) + (t * By(i));
+Ex(i) = ( (1 - t) * Bx(i) ) + (t * Cx(i));
+Ey(i) = ( (1 - t) * By(i) ) + (t * Cy(i));
+%%
+Px(i) = ( (1 - t) * Dx (i)) + (t * Ex(i));
+Py(i) = ( (1 - t) * Dy (i)) + (t * Ey(i));
+end
+%%exemplo
+% figure(1)
+% plot(Px,Py)
+% hold on
+% plot(p0x, p0y,'or')
+% plot(cp0x, cp0y,'or')
+% plot(cp1x, cp1y,'or')
+% plot(p1x, p1y,'or')
+Esse conjunto de programa essencialmente analisa cada conjunto de instrução
+oriundo do SVG. Se for M ou L, o programa transcreve as instruções e as coordenadas. Se
+for C, o programa converte em um determinado numero de instruções L.
+UFABC – Maio 2016
+16Prof. Dr. Filipe Ieda Fazanaro - EN 2715
+Um exemplo de transformação da instrução C em retas L pode ser visto na figura a
+abaixo, onde [C 465.67 27.79 451.94 40.11 439.33 52.33].
+Com o programa foi gerado 10 retas seguindo as seguintes coordenadas M 483.02
+23.01 ; L 477.9211
+24.66256 ; L 473.0244
+26.72168 ; L 468.3149
+29.14152 ;
+L 463.7776
+31.87624 ; L 459.3975
+34.88 ; L 455.1596
+38.10696 ; L 451.0489
+41.51128 ; L 447.0504
+45.04712 ; L 443.1491
+48.66864 ; L 439.33
+52.33.
+Exemplo da transformação da curva de Bézier em retas
+Ao fim dos programas é gerado um arquivo de texto, agora sem instruções C, e com
+cada instrução separada por ponto-e-virgula.
+Formato do arquivo de texto retornado após Matlab®.
+UFABC – Maio 2016
+17Prof. Dr. Filipe Ieda Fazanaro - EN 2715
+3.5. Uso do Excel para gerar código finais
+O uso do Matlab® possibilitou a transformação do arquivo em SVG em um conjunto
+de instruções de coordenadas que representam mover para (M) e linha reta (L).
+Como solução para o desenho no software da ABB, utilizou-se a seguinte instrução
+do RobotStudio:
+moveL Offs(robotTarget Point, numXOffset, numYOffset, numZoffset), speedData, zoneData, toolData ;
+Onde o comando moveL realiza um movimento em linha reta entre os pontos.
+RobotTarget point indica um ponto para tomar de referencia e a partir dele realizar as
+movimentações absolutas indicadas pelos , numXOffset, numYOffset, numZoffset.
+As coordenadas obtidas no Matlab® que compõe os contornos e pontos do desenho
+correspondem a numXOffset, numYOffset. Para termos o código a ser usado no
+RobotStudio basta escolhermos um ponto de referencia (robotTarget Point), velocidades e
+ferramentas.
+Com base nas linha de comando moveL Offs mostrada acima, e com o intuito de
+substituir , numXOffset, numYOffset montamos uma planilha no software Excel®.
+Para isso, importamos o arquivo de texto para o Excel®. Utilizamos os pontos-e-
+virgulas inseridos no Matlab® como separadores de linhas.
+O resultado obtido é demonstrado abaixo.
+Planilha com geração de código para uso direto no software da ABB
+Inserimos os comando M e L com suas respectivas coordenadas criando a coluna
+A, B e C. Foi criado um ponto chamado p0, que é o robotTarget. Este ponto ira ser escolhido
+UFABC – Maio 2016
+18Prof. Dr. Filipe Ieda Fazanaro - EN 2715
+dentro do software RobotSudio com base na altura da mesa onde o desenho será realizado.
+Na coluna E foi criada uma estrutura condicional que se repete de forma diferente caso a
+linha em questão seja M ou L.
+O comando M representa “mover para”, logo ele não faz parte do desenho em sim,
+mas leva para uma coordenada onde irá começar parte do desenho. Por isso sempre que
+a linha em questão é referente a um M, modificamos a coordenada numZoffset para que a
+caneta suba no fim da reta indicada por L ,vá para o ponto indicado por M, e desça de volta
+para mesma coordenada que estava. Assim o comando M move a ferramenta (caneta) para
+onde irá realizar desenho, sem riscar a folha.
+O comando L indica realização do desenho em linha reta para a coordenada que
+ele indica, sendo assim, numZoffset não precisa ser alterado.
+Uma constante multiplicativa foi inserida em cada coordenada de destino
+(numXOffset, numYOffset, numZoffset) para que o desenho passa ser reajustado em
+tamanho. Esses valores representam o deslocamento que a ferramenta ira realizar, sendo
+que são proporcionais e lineares entre si. Assim, multiplicando uma constante (cte na
+imagem) em todas as coordenadas destino é possível alterar as distancias
+proporcionalmente sem prejudicar o desenho.
+Com isso, basta importar o resultado final da coluna E de forma a ter as linhas de
+código com as coordenadas e comando que formam o desenho prontos.
+O ponto p0 foi definido com base onde queríamos começar o desenho. A constante
+cte foi definida de forma que o desenho coubesse perfeitamente na cartolina, e a ferramenta
+e velocidade foi utilizada conforme padrão do laboratório.
+Ao fim obtivemos o seguinte resultado no RobotStudio®.
+Programa pronto para uso
+UFABC – Maio 2016
+19Prof. Dr. Filipe Ieda Fazanaro - EN 2715
+4. Resultados
+O desenho obtido na simulação foi totalmente satisfatório.
+Resultado da simulação
+Porem surgiram ressalvas no projeto.
+A simulação levou pouco mais de 3 horas para ficar completa. A utilização da
+metodologia proposta gerou 20205 linhas de código. O desenho ficou excelente porém a
+quantidade de detalhes e a transformação de curvas em retas, gerou muitas linhas de
+código.
+Porem, o maior responsável pelo tempo longo e por tantas linhas foram as regiões
+completamente pintadas do desenho. Repare que o desenho original do R2D2 apresenta
+linhas grossas e regiões completamente pintadas.
+UFABC – Maio 2016
+20Prof. Dr. Filipe Ieda Fazanaro - EN 2715
+Exemplo de regiões responsáveis por geração de muitas linhas
+O método utilizado, através do SVG, realiza o desenho completo preenchendo
+inclusive as linhas espessas e regiões completas e preenchidas. Era possível realizar o
+desenho final dessa maneira, porem para fins práticos como a utilização prolongada do
+laboratório e realização do vídeo, excluímos as linhas responsáveis pelo preenchimento de
+cor, reduzindo o código para 9909 linhas.
+A realização pratica do desenho levou 50 minutos e obtivemos o seguinte resultado.
+UFABC – Maio 2016
+21Prof. Dr. Filipe Ieda Fazanaro - EN 2715
+Teste pratico realizado no quadro-branco
+Repare que a única diferença para o desenho original é a falta de preenchimento
+nas regiões de linha espeça. O que foi propositalmente retirado por motivos de tempo de
+utilização do laboratório.
+O desenho final realizado em cartolina tamanho padrão pode ser visto no link:
+https://www.youtube.com/watch?v=kMCFQDYKIW4
+UFABC – Maio 2016
+22Prof. Dr. Filipe Ieda Fazanaro - EN 2715
+5. Discussões e Conclusões
+A metodologia proposta possibilita a realização de um desenho final sem que fosse
+necessária a capitação manual ponto a ponto das coordenadas que compõe a figura. Isso
+apresenta incríveis vantagens.
+Qualquer imagem escolhida, poderia ser vetorizada e transformada em linha de
+códigos. O tempo ganho na produção da imagem, a capacidade de desenhar imagens
+grandes e ricas em detalhes, e a possibilidade de se repetir os mesmos passos para outras
+figuras são as maiores vantagens do método.
+O ponto mais trabalhoso e que apresentou maior dificuldade foi o trabalho sobre o
+Matlab®. A conversão do arquivo em SVG, convertendo as curvas em linhas retas foi a
+maior dificuldade, entretanto essa parte uma vez realizada pode ser aplicada para qualquer
+figura.
+Um ponto que ficou em aberto no trabalho foi a limpeza de texto após a vetorização
+da imagem. Utilizamos o Word® de forma manual para realizar tal tarefa. Fica como
+sugestão para um trabalho futuro a automatização desse procedimento.
+A metodologia usada requer certo poder computacional e demanda mais de
+software para ser realizada. Esse fato pode ser considerado uma desvantagem.
+Como vimos, o desenho final rendeu muitas linhas de código, e tempo demasiado
+para ser completado. Qualquer imagem com nível tão elevado de detalhes apresentaria
+muitas linhas e maior tempo, porem o fato de se estas utilizando somente o comando que
+produz linhas retas gera mais linhas do que o esperado, deixando o método não tao
+eficiente.
+Outro fato que gera ineficiência na geração da imagem é a sequencia de desenho.
+A metodologia proposta converte o arquivo da figura em SVG e a partir desse ponto
+trabalhamos diretamente no sequenciamento das coordenadas já existentes. Ou seja, a
+sequencia de pontos não foi escolhida previamente. Como pode ser visto no vídeos muitas
+vezes após ser desenhado um detalhe em um certo lado do desenho, o programa envia a
+ferramenta para o lado oposta da figura, sem ter completado todos os detalhes. Isso gera
+mais movimentações do que seria necessário.
+Apesar das desvantagens referentes a eficiência na hora da realização do desenho,
+e do poder computacional, a metodologia aplicada é muito mais vantajosa comparada a
+outras como medir a distancia ponto a ponto da figura, ou capitar ponto a ponto em
+softwares de modelagens. É possível com poucos procedimentos obter todas as linhas de
+código para a realização pratica de qualquer desenho, mesmo os complexos.
+UFABC – Maio 2016
+23Prof. Dr. Filipe Ieda Fazanaro - EN 2715
+6. Referências
+AurelioAHeckert. (13 de Março de 2008). InkscapeBrasil. Fonte:
+http://wiki.softwarelivre.org/InkscapeBrasil/SVG
+calderon, j. (30 de Outubro de 2011). YouTube. Fonte:
+https://www.youtube.com/watch?v=S3iyOcPuX08
+RELBERT. (03 de fevereiro de 2011). Arte No Corel. Fonte: http://artenocorel.com.br/2011/02/o-
+que-e-vetorizacao.html
+Wikipédia, a. e. (04 de Fevereiro de 2014). Wikipédia, a enciclopédia livre. Fonte: Superfícies de
+Bézier: https://pt.wikipedia.org/wiki/Superf%C3%ADcies_de_B%C3%A9zier
+UFABC – Maio 2016
+24
